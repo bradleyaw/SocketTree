@@ -28,7 +28,7 @@
         }
     }
     //set up socket connection
-    var socket = io.connect('http://localhost:4000')
+    var socket = io();
 
     // Connected to socket
     if (socket !== undefined) {

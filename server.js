@@ -1,7 +1,15 @@
 const mongo = require('mongodb').MongoClient;
+const express = require("express");
+const path = require("path");
 const port = process.env.PORT || 4000;
 const client = require('socket.io').listen(port).sockets;
 const MONGODBURI = 'mongodb://bradleyaw:Password1@ds115472.mlab.com:15472/datatree'
+
+const app = express();
+
+app.get("*", function(req, res) {
+    res.sendFile(path.join(__dirname, "./index.html"));
+  });
 
 mongo.connect(MONGODBURI, function (err, dbs) {
     if (err) {

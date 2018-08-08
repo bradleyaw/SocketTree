@@ -1,15 +1,31 @@
 const mongo = require('mongodb').MongoClient;
-const express = require("express");
-const path = require("path");
+const path = require("path"); //new
 const port = process.env.PORT || 4000;
-const client = require('socket.io').listen(port).sockets;
+//const client = require('socket.io').listen(socketPort).sockets;
+//console.log('Socket server running on port: ' + socketPort)
 const MONGODBURI = 'mongodb://bradleyaw:Password1@ds115472.mlab.com:15472/datatree'
 
-const app = express();
+//const app = require('express')();
+//const server = require('http').createServer(app);
+//const client = require('socket.io')(server);
+//server.listen(port);
 
-app.get("*", function(req, res) {
+var app = require('express')();
+var http = require('http').Server(app);
+var client = require('socket.io')(http);
+
+
+//new
+app.get("/", function(req, res) {
+    console.log("Server app.get /")
     res.sendFile(path.join(__dirname, "./index.html"));
   });
+
+
+http.listen(port, function(){
+    console.log('listening on *:' + port);
+});
+
 
 mongo.connect(MONGODBURI, function (err, dbs) {
     if (err) {
@@ -18,6 +34,7 @@ mongo.connect(MONGODBURI, function (err, dbs) {
     console.log('Mongodb connected');
 
     client.on('connection', function (socket) {
+        console.log("Server on connect")
         const dbTree = dbs.db('datatree').collection('factories');
         /*
         sendStatus = function (s) {
@@ -55,7 +72,8 @@ mongo.connect(MONGODBURI, function (err, dbs) {
             console.log('Server Clear')
             dbTree.deleteMany({}, function () {
                 console.log('Server emitting cleared')
-                socket.emit('cleared')
+                client.emit('cleared')
+                //socket.broadcast.emit('cleared');
             })
             //sendStatus('Cleared');
         })

@@ -23,10 +23,6 @@
                 <div class="nav mb-3 justify-content-center">
                     <button id="clear" class="btn btn-danger mx-2">Reset</button>
                     <button id="add"  class="btn btn-success mx-2" data-toggle="modal" data-target="#modal">Add</button>
-
-                </div>
-                <div id="status">
-
                 </div>
                 <h3 class="text-center text-light bg-secondary py-2 mb-3">Factories</h3>
                 <div id="factories">
@@ -101,21 +97,9 @@
     var upper = element('upper')
     var resetBtn = element('clear')
 
-    //set status default as blank
-    var statusDefault = status.textContent;
-
-    // When status changes display for four seconds
-    var setStatus = function (s) {
-        status.textContent = s;
-
-        if (s !== statusDefault) {
-            var delay = setTimeout(function () {
-                setStatus(statusDefault);
-            }, 4000)
-        }
-    }
     //set up socket connection
-    var socket = io.connect('http://localhost:4000')
+    var socket = io()
+    //var socket = io.connect('http://localhost:4000')
 
     // Connected to socket
     if (socket !== undefined) {
@@ -139,16 +123,6 @@
                 }
             }
         });
-        // On status change
-        /*
-        socket.on('status', function (data) {
-            console.log('Client on status: ' + data);
-            setStatus((typeof data === 'object') ? data.childArr : data)
-            if (data.clear) {
-                factories.value = "";
-            }
-        });
-        */
 
         //On Add Factory modal form submit
         submit.addEventListener('click', function (event) {
@@ -176,7 +150,6 @@
         // On clear
         socket.on('cleared', function () {
             console.log("in cleared of client")
-            //setStatus('Cleared')
             factories.innerHTML = '';
         })
     }

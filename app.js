@@ -5,7 +5,6 @@
         return document.getElementById(id);
     }
     //Grab relevant ids
-    var status = element('status')
     var factories = element('factories')
     var submit = element('submit')
     var factory = element('factory')
@@ -14,21 +13,11 @@
     var upper = element('upper')
     var resetBtn = element('clear')
 
-    //set status default as blank
-    var statusDefault = status.textContent;
 
-    // When status changes display for four seconds
-    var setStatus = function (s) {
-        status.textContent = s;
-
-        if (s !== statusDefault) {
-            var delay = setTimeout(function () {
-                setStatus(statusDefault);
-            }, 4000)
-        }
-    }
     //set up socket connection
     var socket = io();
+    //var socket = io.connect('http://localhost:4000')
+
 
     // Connected to socket
     if (socket !== undefined) {
@@ -52,16 +41,6 @@
                 }
             }
         });
-        // On status change
-        /*
-        socket.on('status', function (data) {
-            console.log('Client on status: ' + data);
-            setStatus((typeof data === 'object') ? data.childArr : data)
-            if (data.clear) {
-                factories.value = "";
-            }
-        });
-        */
 
         //On Add Factory modal form submit
         submit.addEventListener('click', function (event) {
@@ -86,10 +65,9 @@
         resetBtn.addEventListener('click', function () {
             socket.emit('clear')
         })
-        // On clear
+        // On clear after Server process
         socket.on('cleared', function () {
             console.log("in cleared of client")
-            //setStatus('Cleared')
             factories.innerHTML = '';
         })
     }

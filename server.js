@@ -36,11 +36,7 @@ mongo.connect(MONGODBURI, function (err, dbs) {
     client.on('connection', function (socket) {
         console.log("Server on connect")
         const dbTree = dbs.db('datatree').collection('factories');
-        /*
-        sendStatus = function (s) {
-            socket.emit('status', s);
-        }
-        */
+
         dbTree.find().limit(100).sort({ _id: 1 }).toArray(function (err, res) {
             if (err) {
                 throw err;
@@ -54,16 +50,9 @@ mongo.connect(MONGODBURI, function (err, dbs) {
             let childArr = data.childArr;
 
             if (factory == '' || childArr == '') {
-                //sendStatus('Please enter a factory name and lower and upper bounds');
             } else {
                 dbTree.insert({ factory: factory, childArr: childArr }, function () {
                     client.emit('output', [data]);
-                    /*
-                    sendStatus({
-                        message: 'Factory added',
-                        clear: true
-                    })
-                    */
                 })
             }
         })
@@ -73,9 +62,7 @@ mongo.connect(MONGODBURI, function (err, dbs) {
             dbTree.deleteMany({}, function () {
                 console.log('Server emitting cleared')
                 client.emit('cleared')
-                //socket.broadcast.emit('cleared');
             })
-            //sendStatus('Cleared');
         })
     });
 });

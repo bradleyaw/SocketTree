@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+# SocketTree
+An interactive data tree built using Socket.io and Node
+=======
 SocketTree
 ======
 
@@ -17,3 +21,4 @@ My first dive into web sockets and real time applications(excluding firebase). I
 You will need NodeJS installed locally.
 Clone the repository to your computer. 
 Npm install in the root directory
+>>>>>>> refs/remotes/origin/master

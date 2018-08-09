@@ -55,17 +55,13 @@ mongo.connect(MONGODBURI, function (err, dbs) {
 
         // On clear button press delete all documents from Mongo and emit update to all sockets
         socket.on('clear', function (clearData) {
-            console.log('Server Clear')
             dbTree.deleteMany({}, function () {
-                console.log('Server emitting cleared')
                 client.emit('cleared')
             })
         })
 
         socket.on('delete', function (deleteData) {
-            console.log('Server Delete: ' + deleteData);
             dbTree.deleteOne({ factory: String(deleteData) }, function () {
-                console.log('Server emitting deleted')
                 client.emit('deleted', [deleteData])
             })
         })

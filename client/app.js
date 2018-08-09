@@ -82,7 +82,6 @@
                     arr[arr.length] = randomnumber;
                 }
                 arr.sort((a, b) => a - b);
-                console.log(factory.value)
                 socket.emit('input', { factory: factory.value, childArr: arr })
                 factory.value = 'John';
                 lower.value = 1;
@@ -96,20 +95,17 @@
 
             // On clear after server process
             socket.on('cleared', function () {
-                console.log("in cleared of client")
                 $('#jstree').jstree("refresh");
                 selectFactory.options.length = 0;
             })
 
             // On delete button click
             deleteBtn.addEventListener('click', function () {
-                console.log('selectFactory: ' + selectFactory)
                 socket.emit('delete', [selectFactory.value])
             })
             // On delete after server process
             socket.on('deleted', function (deletedData) {
                 var nodeToDelete = `factory${deletedData}1`
-                console.log("Deleted data: " + nodeToDelete);
                 $('#jstree').jstree().delete_node(nodeToDelete);
                 for (var i = 0; i < selectFactory.length; i++) {
                     if (selectFactory.options[i].value == deletedData)

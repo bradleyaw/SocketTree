@@ -21,6 +21,15 @@ http.listen(port, function () {
     console.log('listening on *:' + port);
 });
 
+function outputData(dbTree, dest){
+    dbTree.find().limit(100).sort({ _id: 1 }).toArray(function (err, res) {
+        if (err) {
+            throw err;
+        }
+        console.log(res);
+        dest.emit('output', res);
+    });
+}
 
 mongo.connect(MONGODBURI, function (err, dbs) {
     if (err) {
@@ -32,25 +41,32 @@ mongo.connect(MONGODBURI, function (err, dbs) {
         console.log("Server on connect")
         const dbTree = dbs.db('datatree').collection('factories');
 
-        dbTree.find().limit(100).sort({ _id: 1 }).toArray(function (err, res) {
-            if (err) {
-                throw err;
-            }
-            console.log(res);
-            socket.emit('output', res);
-        });
+        outputData(dbTree, socket);
 
         // On user input add to db and emit data to all sockets
         socket.on('input', function (data) {
             console.log(data);
-            //console.log(dbTree.find({factory : data.factory}))
-            //if (dbTree.find({factory : data.factory})) {
-            //    console.log("exists");
-            //} else {
+
                 dbTree.insert({ factory: data.factory, childArr: data.childArr }, function () {
                     client.emit('output', [data]);
                 })
-            //}
+        })
+        //Update Name (updates correctly, but async with jsTree.)
+        socket.on('updateName', function (data) {
+            console.log("Update Name data");
+            console.log(data);
+                dbTree.updateOne({ factory: data.oldfactory }, { $set: { factory: data.factory } }, function () {
+                    outputData(dbTree, client);
+                })
+        })
+        
+        //Update Array (updates correctly, but async with jsTree.)
+        socket.on('updateArray', function (data) {
+            console.log("Update Array data");
+            console.log(data);
+                dbTree.updateOne({ factory: data.oldfactory }, { $set: { childArr: data.childArr } }, function () {
+                    client.emit('output', [data]);
+                })
         })
 
         // On clear button press delete all documents from Mongo and emit update to all sockets
@@ -59,7 +75,7 @@ mongo.connect(MONGODBURI, function (err, dbs) {
                 client.emit('cleared')
             })
         })
-
+        //On delete button press, delete document that matches the name in the select box
         socket.on('delete', function (deleteData) {
             dbTree.deleteOne({ factory: String(deleteData) }, function () {
                 client.emit('deleted', [deleteData])

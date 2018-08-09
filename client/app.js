@@ -6,8 +6,8 @@
     }
     //Grab relevant ids
     var submit = element('submit')
-    var factory = element('factory')
-    var select = element('select')
+    var factoryInput = element('factoryInput')
+    var selectInput = element('select')
     var lower = element('lower')
     var upper = element('upper')
     var resetBtn = element('clear')
@@ -15,6 +15,13 @@
     var deleteBtn = element('delete')
     var selectFactory = element('selectFactory')
     var jstree = element('jstree')
+    var update = element('update')
+    var updateData = element('updateData')
+    var lowerUpdate = element('lowerUpdate')
+    var upperUpdate = element('upperUpdate')
+    var selectUpdate = element('selectUpdate')
+    var factoryUpdate = element('factoryUpdate')
+
 
     //Load jsTree JQuery
     $(function () {
@@ -68,10 +75,32 @@
                 }
             });
 
+            socket.on('clientRename', function (data) {
+
+                console.log(data);
+                if (data.length) {
+                    for (var i = 0; i < data.length; i++) {
+                        createNode("#root", "factory" + data[i].factory + String(i + 1), data[i].factory);
+                        //for each factory append option to select
+                        var factoryName = document.createElement("option");
+                        factoryName.text = data[i].factory;
+                        factoryName.value = data[i].factory;
+                        selectFactory.add(factoryName);
+                        deleteContainer.appendChild(selectFactory);
+                        deleteContainer.insertBefore(selectFactory, deleteContainer.firstChild);
+                        console.log("factory" + String(i + 1));
+                        for (var j = 0; j < data[i].childArr.length; j++) {
+                            createNode("#factory" + data[i].factory + String(i + 1), data[i].factory + String(j + 1), data[i].childArr[j]);
+                        }
+                    }
+                }
+            });
+
             //On Add Factory modal form submit
             submit.addEventListener('click', function (event) {
+                console.log(factoryInput.value);
                 var arr = [];
-                var arrayLength = select.value;
+                var arrayLength = selectInput.value;
                 var lowerVal = Number(lower.value);
                 var upperVal = Number(upper.value);
                 while (arr.length < arrayLength) {
@@ -82,11 +111,11 @@
                     arr[arr.length] = randomnumber;
                 }
                 arr.sort((a, b) => a - b);
-                socket.emit('input', { factory: factory.value, childArr: arr })
-                factory.value = 'John';
+                socket.emit('input', { factory: factoryInput.value, childArr: arr })
+                factoryInput.value = 'John';
                 lower.value = 1;
                 upper.value = 100;
-                select.value = 1;
+                selectInput.value = 1;
             });
             // On reset button click
             resetBtn.addEventListener('click', function () {
@@ -113,6 +142,35 @@
                 }
             })
 
+            //On Update button click
+            /*
+            update.addEventListener('click', function (event) {
+                console.log(selectFactory.value)
+                factoryUpdate.value = selectFactory.value
+            });
+            */
+
+            // On update factory name modal submit
+            updateName.addEventListener('click', function (event) {
+                socket.emit('updateName', { oldfactory: selectFactory.value, factory: factoryUpdate.value })
+            });
+
+             // On update child array modal submit
+             updateArray.addEventListener('click', function (event) {
+                var arr = [];
+                var arrayLength = selectUpdate.value;
+                var lowerVal = Number(lowerUpdate.value);
+                var upperVal = Number(upperUpdate.value);
+                while (arr.length < arrayLength) {
+                    function getRndInteger(min, max) {
+                        return min + Math.floor(Math.random() * (max - min + 1));
+                    }
+                    var randomnumber = getRndInteger(lowerVal, upperVal);
+                    arr[arr.length] = randomnumber;
+                }
+                arr.sort((a, b) => a - b);
+                socket.emit('updateArray', { oldfactory: selectFactory.value, childArr: arr })
+            });
         }
     });
 

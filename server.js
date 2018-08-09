@@ -40,23 +40,28 @@ mongo.connect(MONGODBURI, function (err, dbs) {
             socket.emit('output', res);
         });
 
+        // On user input add to db and emit data to all sockets
         socket.on('input', function (data) {
-            let factory = data.factory;
-            let childArr = data.childArr;
-
-            if (factory == '' || childArr == '') {
-            } else {
-                dbTree.insert({ factory: factory, childArr: childArr }, function () {
-                    client.emit('output', [data]);
-                })
-            }
+            console.log(data);
+            dbTree.insert({ factory: data.factory, childArr: data.childArr }, function () {
+                client.emit('output', [data]);
+            })
         })
-
-        socket.on('clear', function (data) {
+        
+        // On clear button press delete all documents from Mongo and emit update to all sockets
+        socket.on('clear', function (clearData) {
             console.log('Server Clear')
             dbTree.deleteMany({}, function () {
                 console.log('Server emitting cleared')
                 client.emit('cleared')
+            })
+        })
+
+        socket.on('delete', function (DeleteData) {
+            console.log('Server Delete: ' + DeleteData);
+            dbTree.deleteOne({_id : DeleteData}, function () {
+                console.log('Server emitting deleted')
+                client.emit('deleted', [DeleteData])
             })
         })
     });

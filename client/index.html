@@ -10,30 +10,34 @@
     <!-- Bootstrap CSS CDN-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
+    <!-- jsTree CSS CDN-->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/themes/default/style.min.css" />
 </head>
 
 <body>
     <!------------------>
     <!-- Main Display -->
     <!------------------>
+    
     <main class="container">
         <div class="row">
             <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-12">
                 <h1 class="text-center">Alex Bradley's Data Tree</h1>
                 <div class="nav mb-3 justify-content-center">
+                    <button id="add" class="btn btn-success mx-2" data-toggle="modal" data-target="#modal">Add</button>
+                    <button id="delete" class="btn btn-danger mx-2">Delete</button>
                     <button id="clear" class="btn btn-danger mx-2">Reset</button>
-                    <button id="add"  class="btn btn-success mx-2" data-toggle="modal" data-target="#modal">Add</button>
+
                 </div>
                 <h3 class="text-center text-light bg-secondary py-2 mb-3">Factories</h3>
-                <section id="factories">
+                <section id="jstree">
                 </section>
             </div>
-        </div>
     </main>
 
     <!----------->
     <!-- Modal -->
-    <!----------->
+    <!-- -------->
     <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -71,7 +75,7 @@
                     <label>Set Upper Bound:</label>
                     <input type="number" id="upper" class="form-control">
                 </div>
-                 <!-- Modal Footer -->
+                <!-- Modal Footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button id="submit" type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
@@ -84,13 +88,15 @@
     <!-- Scripts -->
     <!------------->
 
-    <!-- Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
+    <!-- Jquery/Popper/Bootstrap CDN Combo -->
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+
+    <!-- jsTree -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/jstree.min.js"></script>
 
     <!-- Socket.io-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>

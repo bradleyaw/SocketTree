@@ -11,13 +11,13 @@ var client = require('socket.io')(http);
 
 app.use(express.static('client'))
 
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
     console.log("Server app.get /")
     res.sendFile(path.join(__dirname, "./client/index.html"));
-  });
+});
 
 
-http.listen(port, function(){
+http.listen(port, function () {
     console.log('listening on *:' + port);
 });
 
@@ -43,11 +43,16 @@ mongo.connect(MONGODBURI, function (err, dbs) {
         // On user input add to db and emit data to all sockets
         socket.on('input', function (data) {
             console.log(data);
-            dbTree.insert({ factory: data.factory, childArr: data.childArr }, function () {
-                client.emit('output', [data]);
-            })
+            //console.log(dbTree.find({factory : data.factory}))
+            //if (dbTree.find({factory : data.factory})) {
+            //    console.log("exists");
+            //} else {
+                dbTree.insert({ factory: data.factory, childArr: data.childArr }, function () {
+                    client.emit('output', [data]);
+                })
+            //}
         })
-        
+
         // On clear button press delete all documents from Mongo and emit update to all sockets
         socket.on('clear', function (clearData) {
             console.log('Server Clear')
@@ -57,11 +62,11 @@ mongo.connect(MONGODBURI, function (err, dbs) {
             })
         })
 
-        socket.on('delete', function (DeleteData) {
-            console.log('Server Delete: ' + DeleteData);
-            dbTree.deleteOne({_id : DeleteData}, function () {
+        socket.on('delete', function (deleteData) {
+            console.log('Server Delete: ' + deleteData);
+            dbTree.deleteOne({ factory: String(deleteData) }, function () {
                 console.log('Server emitting deleted')
-                client.emit('deleted', [DeleteData])
+                client.emit('deleted', [deleteData])
             })
         })
     });

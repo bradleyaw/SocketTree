@@ -18,18 +18,25 @@
     <!------------------>
     <!-- Main Display -->
     <!------------------>
-    
     <main class="container">
         <div class="row">
             <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-12">
                 <h1 class="text-center">Alex Bradley's Data Tree</h1>
-                <div class="nav mb-3 justify-content-center">
-                    <button id="add" class="btn btn-success mx-2" data-toggle="modal" data-target="#modal">Add</button>
-                    <button id="delete" class="btn btn-danger mx-2">Delete</button>
-                    <button id="clear" class="btn btn-danger mx-2">Reset</button>
+                <div class="nav mb-3">
+                    <div class="col-12 mb-2 text-center">
+                        <button id="add" class="btn btn-success mx-2" data-toggle="modal" data-target="#modal">Add Factory</button>
+                        <button id="clear" class="btn btn-danger mx-2">Reset Tree</button>
+                    </div>
+                    <div id="deleteContainer" class="col-12 text-center">
+                        <select name="" id="selectFactory" class="col-6 d-inline form-control mx-2"></select>
+                        <button id="delete" class="btn btn-danger mx-2">Delete</button>
+                        <button id="update" class="btn btn-danger mx-2">Update</button>
+
+                    </div>
 
                 </div>
                 <h3 class="text-center text-light bg-secondary py-2 mb-3">Factories</h3>
+                <!-- Tree populates here -->
                 <section id="jstree">
                 </section>
             </div>

@@ -11,7 +11,9 @@
     var lower = element('lower')
     var upper = element('upper')
     var resetBtn = element('clear')
+    var deleteContainer = element('deleteContainer')
     var deleteBtn = element('delete')
+    var selectFactory = element('selectFactory')
     var jstree = element('jstree')
 
     //Load jsTree JQuery
@@ -51,6 +53,13 @@
                 if (data.length) {
                     for (var i = 0; i < data.length; i++) {
                         createNode("#root", "factory" + data[i].factory + String(i + 1), data[i].factory);
+                        //for each factory append option to select
+                        var factoryName = document.createElement("option");
+                        factoryName.text = data[i].factory;
+                        factoryName.value = data[i].factory;
+                        selectFactory.add(factoryName);
+                        deleteContainer.appendChild(selectFactory);
+                        deleteContainer.insertBefore(selectFactory, deleteContainer.firstChild);
                         console.log("factory" + String(i + 1));
                         for (var j = 0; j < data[i].childArr.length; j++) {
                             createNode("#factory" + data[i].factory + String(i + 1), data[i].factory + String(j + 1), data[i].childArr[j]);
@@ -84,28 +93,37 @@
             resetBtn.addEventListener('click', function () {
                 socket.emit('clear')
             })
-            // On clear after Server process
+
+            // On clear after server process
             socket.on('cleared', function () {
                 console.log("in cleared of client")
                 $('#jstree').jstree("refresh");
+                selectFactory.options.length = 0;
+            })
 
-            })
+            // On delete button click
             deleteBtn.addEventListener('click', function () {
-                deleteData = 'factoryAlex1' //needs to be a field in mongo or change to other.
-                socket.emit('delete', [deleteData])
+                console.log('selectFactory: ' + selectFactory)
+                socket.emit('delete', [selectFactory.value])
             })
+            // On delete after server process
             socket.on('deleted', function (deletedData) {
-                console.log("Deleted data: " + deletedData);
-                $('#jstree').jstree().delete_node([deletedData]);
+                var nodeToDelete = `factory${deletedData}1`
+                console.log("Deleted data: " + nodeToDelete);
+                $('#jstree').jstree().delete_node(nodeToDelete);
+                for (var i = 0; i < selectFactory.length; i++) {
+                    if (selectFactory.options[i].value == deletedData)
+                        selectFactory.remove(i);
+                }
             })
 
         }
     });
 
-    // Helper method createNode(parent, id, text, position).
-    // Dynamically adds nodes to the jsTree. Position can be 'first' or 'last'.
+    // Adds nodes to the jsTree. Position can be 'first' or 'last'.
     function createNode(parent_node, new_node_id, new_node_text, position) {
         $('#jstree').jstree('create_node', $(parent_node), { "text": new_node_text, "id": new_node_id }, position, false, false);
     }
 
 })();
+

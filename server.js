@@ -1,24 +1,19 @@
 const mongo = require('mongodb').MongoClient;
-const path = require("path"); //new
+const path = require("path");
 const port = process.env.PORT || 4000;
-//const client = require('socket.io').listen(socketPort).sockets;
-//console.log('Socket server running on port: ' + socketPort)
+
 const MONGODBURI = 'mongodb://bradleyaw:Password1@ds115472.mlab.com:15472/datatree'
 
-//const app = require('express')();
-//const server = require('http').createServer(app);
-//const client = require('socket.io')(server);
-//server.listen(port);
-
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var client = require('socket.io')(http);
 
+app.use(express.static('client'))
 
-//new
 app.get("/", function(req, res) {
     console.log("Server app.get /")
-    res.sendFile(path.join(__dirname, "./index.html"));
+    res.sendFile(path.join(__dirname, "./client/index.html"));
   });
 
 

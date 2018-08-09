@@ -9,13 +9,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-<<<<<<< HEAD
-    "mongodb": "^3.1.1",
-=======
     "express": "^4.16.3",
     "mongodb": "^3.1.1",
     "path": "^0.12.7",
->>>>>>> refs/remotes/origin/master
     "socket.io": "^2.1.1"
   }
 }

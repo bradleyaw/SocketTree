@@ -85,7 +85,7 @@
                 var lowerVal = Number(lower.value);
                 var upperVal = Number(upper.value);
                 //if statement to validate bounds for Array creation and that factory name exists
-                if (upperVal >= lowerVal && Number.isInteger(lowerVal) && Number.isInteger(upperVal) && (factoryInput.value.match(/^[\w]+$/))) {
+                if (upperVal >= lowerVal && Number.isInteger(lowerVal) && Number.isInteger(upperVal) && upperVal <= 999999999 && (factoryInput.value.match(/^[\w]+$/))) {
                     while (arr.length < arrayLength) {
                         function getRndInteger(min, max) {
                             return min + Math.floor(Math.random() * (max - min + 1));

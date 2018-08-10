@@ -30,10 +30,8 @@
                     <div id="deleteContainer" class="col-12 text-center">
                         <select name="" id="selectFactory" class="col-6 d-inline form-control mx-2 align-middle"></select>
                         <button id="delete" class="btn btn-danger mx-2">Delete</button>
-                        <!-- <button id="update" class="btn btn-primary mx-2" data-toggle="modal" data-target="#updateModal">Update</button> -->
-
+                        <button id="update" class="btn btn-primary mx-2" data-toggle="modal" data-target="#updateModal">Update</button>
                     </div>
-
                 </div>
                 <!-- Tree populates here -->
                 <section id="jstree">
@@ -93,56 +91,56 @@
     <!-- Update Modal -->
     <!-- ------------ -->
     <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="ModalLabel">Update Factory</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <!-- Modal Form -->
-                    <div class="modal-body">
-                        <label>Edit factory name:</label>
-                        <input type="text" id="factoryUpdate" class="form-control">
-                        <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button id="updateName" type="button" class="btn btn-primary" data-dismiss="modal">Update Name</button>
-                            </div>
-                        <h5 class="mt-4 mb-2">Edit Children</h5>
-                        <p class="lead text-danger">warning: if you add data into the bound fields below, you will replace all previous children</p>
-                        <label>Child Nodes:</label>
-                        <select id="selectUpdate" class="form-control">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                        </select>
-                        <label>Set Lower Bound:</label>
-                        <input type="number" id="lowerUpdate" class="form-control">
-                        <label>Set Upper Bound:</label>
-                        <input type="number" id="upperUpdate" class="form-control">
-                    </div>
-                    <!-- Modal Footer -->
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel">Update Factory</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- Modal Form -->
+                <div class="modal-body">
+                    <label>Edit factory name:</label>
+                    <input type="text" id="factoryUpdate" class="form-control">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button id="updateArray" type="button" class="btn btn-primary" data-dismiss="modal">Update Children</button>
+                        <button id="updateName" type="button" class="btn btn-primary" data-dismiss="modal">Update Name</button>
                     </div>
+                    <h5 class="mt-4 mb-2">Edit Children</h5>
+                    <p class="lead text-danger">warning: if you add data into the bound fields below, you will replace all previous children</p>
+                    <label>Child Nodes:</label>
+                    <select id="selectUpdate" class="form-control">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                    </select>
+                    <label>Set Lower Bound:</label>
+                    <input type="number" id="lowerUpdate" class="form-control">
+                    <label>Set Upper Bound:</label>
+                    <input type="number" id="upperUpdate" class="form-control">
+                </div>
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="updateArray" type="button" class="btn btn-primary" data-dismiss="modal">Update Children</button>
                 </div>
             </div>
         </div>
+    </div>
 
     <!------------->
     <!-- Scripts -->

@@ -48,7 +48,8 @@ mongo.connect(MONGODBURI, function (err, dbs) {
             console.log(data);
 
                 dbTree.insert({ factory: data.factory, childArr: data.childArr }, function () {
-                    client.emit('output', [data]);
+                    outputData(dbTree, client);
+
                 })
         })
         //Update Name (updates correctly, but async with jsTree.)
@@ -65,7 +66,7 @@ mongo.connect(MONGODBURI, function (err, dbs) {
             console.log("Update Array data");
             console.log(data);
                 dbTree.updateOne({ factory: data.oldfactory }, { $set: { childArr: data.childArr } }, function () {
-                    client.emit('output', [data]);
+                    outputData(dbTree, client);
                 })
         })
 
@@ -78,7 +79,7 @@ mongo.connect(MONGODBURI, function (err, dbs) {
         //On delete button press, delete document that matches the name in the select box
         socket.on('delete', function (deleteData) {
             dbTree.deleteOne({ factory: String(deleteData) }, function () {
-                client.emit('deleted', [deleteData])
+                outputData(dbTree, client);
             })
         })
     });

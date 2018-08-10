@@ -55,31 +55,16 @@
 
             //On receipt of data
             socket.on('output', function (data) {
-
-                console.log(data);
                 if (data.length) {
-                    for (var i = 0; i < data.length; i++) {
-                        createNode("#root", "factory" + data[i].factory + String(i + 1), data[i].factory);
-                        //for each factory append option to select
-                        var factoryName = document.createElement("option");
-                        factoryName.text = data[i].factory;
-                        factoryName.value = data[i].factory;
-                        selectFactory.add(factoryName);
-                        deleteContainer.appendChild(selectFactory);
-                        deleteContainer.insertBefore(selectFactory, deleteContainer.firstChild);
-                        console.log("factory" + String(i + 1));
-                        for (var j = 0; j < data[i].childArr.length; j++) {
-                            createNode("#factory" + data[i].factory + String(i + 1), data[i].factory + String(j + 1), data[i].childArr[j]);
-                        }
-                    }
-                }
-            });
+                    console.log(data.length);
+                    // get the children of the root folder and remove them before populating refreshed data
+                    var children = $("#jstree").jstree(true).get_node('root').children;
+                    $("#jstree").jstree(true).delete_node(children);
+                    // Also reset select option
+                    selectFactory.options.length = 0;
 
-            socket.on('clientRename', function (data) {
-
-                console.log(data);
-                if (data.length) {
                     for (var i = 0; i < data.length; i++) {
+                        console.log(data[i].factory);
                         createNode("#root", "factory" + data[i].factory + String(i + 1), data[i].factory);
                         //for each factory append option to select
                         var factoryName = document.createElement("option");
@@ -98,7 +83,6 @@
 
             //On Add Factory modal form submit
             submit.addEventListener('click', function (event) {
-                console.log(factoryInput.value);
                 var arr = [];
                 var arrayLength = selectInput.value;
                 var lowerVal = Number(lower.value);
@@ -132,31 +116,19 @@
             deleteBtn.addEventListener('click', function () {
                 socket.emit('delete', [selectFactory.value])
             })
-            // On delete after server process
-            socket.on('deleted', function (deletedData) {
-                var nodeToDelete = `factory${deletedData}1`
-                $('#jstree').jstree().delete_node(nodeToDelete);
-                for (var i = 0; i < selectFactory.length; i++) {
-                    if (selectFactory.options[i].value == deletedData)
-                        selectFactory.remove(i);
-                }
-            })
 
             //On Update button click
-            /*
             update.addEventListener('click', function (event) {
-                console.log(selectFactory.value)
                 factoryUpdate.value = selectFactory.value
             });
-            */
 
             // On update factory name modal submit
             updateName.addEventListener('click', function (event) {
                 socket.emit('updateName', { oldfactory: selectFactory.value, factory: factoryUpdate.value })
             });
 
-             // On update child array modal submit
-             updateArray.addEventListener('click', function (event) {
+            // On update child array modal submit
+            updateArray.addEventListener('click', function (event) {
                 var arr = [];
                 var arrayLength = selectUpdate.value;
                 var lowerVal = Number(lowerUpdate.value);

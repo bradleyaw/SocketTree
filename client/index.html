@@ -95,22 +95,21 @@
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ModalLabel">Update Factory</h5>
+                    <h5 class="modal-title" id="ModalLabel">Edit Factory</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <!-- Modal Form -->
                 <div class="modal-body">
-                    <label>Edit factory name:</label>
+                    <h6 class="mt-2">Edit factory name</h6>
                     <input type="text" id="factoryUpdate" class="form-control">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button id="updateName" type="button" class="btn btn-primary" data-dismiss="modal">Update Name</button>
                     </div>
-                    <h5 class="mt-4 mb-2">Edit Children</h5>
-                    <p class="lead text-danger">warning: if you add data into the bound fields below, you will replace all previous children</p>
-                    <label>Child Nodes:</label>
+                    <h6 class="mt-4 mb-2">Edit Children</h6>
+                    <label>Number of child nodes:</label>
                     <select id="selectUpdate" class="form-control">
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -128,9 +127,9 @@
                         <option value="14">14</option>
                         <option value="15">15</option>
                     </select>
-                    <label>Set Lower Bound:</label>
+                    <label>Set lower bound:</label>
                     <input type="number" id="lowerUpdate" class="form-control">
-                    <label>Set Upper Bound:</label>
+                    <label>Set upper bound:</label>
                     <input type="number" id="upperUpdate" class="form-control">
                 </div>
                 <!-- Modal Footer -->

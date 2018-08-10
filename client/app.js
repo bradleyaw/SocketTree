@@ -87,19 +87,24 @@
                 var arrayLength = selectInput.value;
                 var lowerVal = Number(lower.value);
                 var upperVal = Number(upper.value);
-                while (arr.length < arrayLength) {
-                    function getRndInteger(min, max) {
-                        return min + Math.floor(Math.random() * (max - min + 1));
+                //if statement to validate bounds for Array creation and that factory name exists
+                if (upperVal >= lowerVal && Number.isInteger(lowerVal) && Number.isInteger(upperVal) && (factoryInput.value)) {
+                    while (arr.length < arrayLength) {
+                        function getRndInteger(min, max) {
+                            return min + Math.floor(Math.random() * (max - min + 1));
+                        }
+                        var randomnumber = getRndInteger(lowerVal, upperVal);
+                        arr[arr.length] = randomnumber;
                     }
-                    var randomnumber = getRndInteger(lowerVal, upperVal);
-                    arr[arr.length] = randomnumber;
+                    arr.sort((a, b) => a - b);
+                    socket.emit('input', { factory: factoryInput.value, childArr: arr })
+                    factoryInput.value = 'John';
+                    lower.value = 1;
+                    upper.value = 100;
+                    selectInput.value = 1;
+                } else {
+                    alert("Please ensure you have included a factory name and integer bounds")
                 }
-                arr.sort((a, b) => a - b);
-                socket.emit('input', { factory: factoryInput.value, childArr: arr })
-                factoryInput.value = 'John';
-                lower.value = 1;
-                upper.value = 100;
-                selectInput.value = 1;
             });
             // On reset button click
             resetBtn.addEventListener('click', function () {
@@ -124,24 +129,32 @@
 
             // On update factory name modal submit
             updateName.addEventListener('click', function (event) {
-                socket.emit('updateName', { oldfactory: selectFactory.value, factory: factoryUpdate.value })
+                if (factoryInput.value) {
+                    socket.emit('updateName', { oldfactory: selectFactory.value, factory: factoryUpdate.value })
+                } else {
+                    alert("Please ensure you have included a factory name and integer bounds")
+                }
             });
 
             // On update child array modal submit
             updateArray.addEventListener('click', function (event) {
-                var arr = [];
-                var arrayLength = selectUpdate.value;
-                var lowerVal = Number(lowerUpdate.value);
-                var upperVal = Number(upperUpdate.value);
-                while (arr.length < arrayLength) {
-                    function getRndInteger(min, max) {
-                        return min + Math.floor(Math.random() * (max - min + 1));
+                if (upperVal >= lowerVal && Number.isInteger(lowerVal) && Number.isInteger(upperVal)) {
+                    var arr = [];
+                    var arrayLength = selectUpdate.value;
+                    var lowerVal = Number(lowerUpdate.value);
+                    var upperVal = Number(upperUpdate.value);
+                    while (arr.length < arrayLength) {
+                        function getRndInteger(min, max) {
+                            return min + Math.floor(Math.random() * (max - min + 1));
+                        }
+                        var randomnumber = getRndInteger(lowerVal, upperVal);
+                        arr[arr.length] = randomnumber;
                     }
-                    var randomnumber = getRndInteger(lowerVal, upperVal);
-                    arr[arr.length] = randomnumber;
+                    arr.sort((a, b) => a - b);
+                    socket.emit('updateArray', { oldfactory: selectFactory.value, childArr: arr })
+                } else {
+                    alert("Please ensure you have included a factory name and integer bounds")
                 }
-                arr.sort((a, b) => a - b);
-                socket.emit('updateArray', { oldfactory: selectFactory.value, childArr: arr })
             });
         }
     });

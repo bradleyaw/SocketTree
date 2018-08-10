@@ -12,7 +12,6 @@ var client = require('socket.io')(http);
 app.use(express.static('client'))
 
 app.get("/", function (req, res) {
-    console.log("Server app.get /")
     res.sendFile(path.join(__dirname, "./client/index.html"));
 });
 
@@ -26,7 +25,6 @@ function outputData(dbTree, dest) {
         if (err) {
             throw err;
         }
-        console.log(res);
         dest.emit('output', res);
     });
 }
@@ -38,7 +36,6 @@ mongo.connect(MONGODBURI, function (err, dbs) {
     console.log('Mongodb connected');
 
     client.on('connection', function (socket) {
-        console.log("Server on connect")
         const dbTree = dbs.db('datatree').collection('factories');
 
         outputData(dbTree, socket);

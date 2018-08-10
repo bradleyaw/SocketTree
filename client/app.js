@@ -56,15 +56,13 @@
             //On receipt of data
             socket.on('output', function (data) {
                 if (data.length) {
-                    console.log(data.length);
                     // get the children of the root folder and remove them before populating refreshed data
                     var children = $("#jstree").jstree(true).get_node('root').children;
                     $("#jstree").jstree(true).delete_node(children);
                     // Also reset select option
                     selectFactory.options.length = 0;
-
+                    console.log(data);
                     for (var i = 0; i < data.length; i++) {
-                        console.log(data[i].factory);
                         createNode("#root", "factory" + data[i].factory + String(i + 1), data[i].factory);
                         //for each factory append option to select
                         var factoryName = document.createElement("option");
@@ -73,7 +71,6 @@
                         selectFactory.add(factoryName);
                         deleteContainer.appendChild(selectFactory);
                         deleteContainer.insertBefore(selectFactory, deleteContainer.firstChild);
-                        console.log("factory" + String(i + 1));
                         for (var j = 0; j < data[i].childArr.length; j++) {
                             createNode("#factory" + data[i].factory + String(i + 1), data[i].factory + String(j + 1), data[i].childArr[j]);
                         }
@@ -88,7 +85,7 @@
                 var lowerVal = Number(lower.value);
                 var upperVal = Number(upper.value);
                 //if statement to validate bounds for Array creation and that factory name exists
-                if (upperVal >= lowerVal && Number.isInteger(lowerVal) && Number.isInteger(upperVal) && (factoryInput.value)) {
+                if (upperVal >= lowerVal && Number.isInteger(lowerVal) && Number.isInteger(upperVal) && (factoryInput.value.match(/^[\w]+$/))) {
                     while (arr.length < arrayLength) {
                         function getRndInteger(min, max) {
                             return min + Math.floor(Math.random() * (max - min + 1));
@@ -129,7 +126,7 @@
 
             // On update factory name modal submit
             updateName.addEventListener('click', function (event) {
-                if (factoryInput.value) {
+                if (factoryInput.value.match(/^[\w]+$/)) {
                     socket.emit('updateName', { oldfactory: selectFactory.value, factory: factoryUpdate.value })
                 } else {
                     alert("Please ensure you have included a factory name and integer bounds")

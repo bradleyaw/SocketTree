@@ -1,9 +1,6 @@
 //IIFE
 (function () {
-    //function grab by ID
-    var element = function (id) {
-        return document.getElementById(id);
-    }
+
     //Grab relevant ids
     var submit = element('submit')
     var factoryInput = element('factoryInput')
@@ -21,7 +18,8 @@
     var upperUpdate = element('upperUpdate')
     var selectUpdate = element('selectUpdate')
     var factoryUpdate = element('factoryUpdate')
-
+    var error = element('error')
+    var errorDefault = error.textContent;
 
     //Load jsTree JQuery
     $(function () {
@@ -63,7 +61,7 @@
                     selectFactory.options.length = 0;
                     console.log(data);
                     for (var i = 0; i < data.length; i++) {
-                        createNode("#root", "factory" + data[i].factory + String(i + 1), data[i].factory);
+                        createNode("#root", "factory" + data[i].factory, data[i].factory);
                         //for each factory append option to select
                         var factoryName = document.createElement("option");
                         factoryName.text = data[i].factory;
@@ -72,7 +70,11 @@
                         deleteContainer.appendChild(selectFactory);
                         deleteContainer.insertBefore(selectFactory, deleteContainer.firstChild);
                         for (var j = 0; j < data[i].childArr.length; j++) {
-                            createNode("#factory" + data[i].factory + String(i + 1), data[i].factory + String(j + 1), data[i].childArr[j]);
+                            var childIndex = data[i].childArr[j]
+                            if (childIndex == 0) {
+                                childIndex = '0'
+                            }
+                            createNode("#factory" + data[i].factory, data[i].factory + String(j + 1), childIndex);
                         }
                     }
                 }
@@ -85,15 +87,8 @@
                 var lowerVal = Number(lower.value);
                 var upperVal = Number(upper.value);
                 //if statement to validate bounds for Array creation and that factory name exists
-                if (upperVal >= lowerVal && Number.isInteger(lowerVal) && Number.isInteger(upperVal) && upperVal <= 999999999 && (factoryInput.value.match(/^[\w]+$/))) {
-                    while (arr.length < arrayLength) {
-                        function getRndInteger(min, max) {
-                            return min + Math.floor(Math.random() * (max - min + 1));
-                        }
-                        var randomnumber = getRndInteger(lowerVal, upperVal);
-                        arr[arr.length] = randomnumber;
-                    }
-                    arr.sort((a, b) => a - b);
+                if (factoryInput.value.match(/^[\w]+$/)) {
+                    generateArray(arr, arrayLength, lowerVal, upperVal);
                     socket.emit('input', { factory: factoryInput.value, childArr: arr })
                     factoryInput.value = 'John';
                     lower.value = 1;
@@ -103,6 +98,7 @@
                     alert("Please ensure you have included a factory name and integer bounds")
                 }
             });
+
             // On reset button click
             resetBtn.addEventListener('click', function () {
                 socket.emit('clear')
@@ -135,30 +131,57 @@
 
             // On update child array modal submit
             updateArray.addEventListener('click', function (event) {
-                if (upperVal >= lowerVal && Number.isInteger(lowerVal) && Number.isInteger(upperVal)) {
                     var arr = [];
                     var arrayLength = selectUpdate.value;
                     var lowerVal = Number(lowerUpdate.value);
                     var upperVal = Number(upperUpdate.value);
-                    while (arr.length < arrayLength) {
-                        function getRndInteger(min, max) {
-                            return min + Math.floor(Math.random() * (max - min + 1));
-                        }
-                        var randomnumber = getRndInteger(lowerVal, upperVal);
-                        arr[arr.length] = randomnumber;
-                    }
-                    arr.sort((a, b) => a - b);
+                    generateArray(arr, arrayLength, lowerVal, upperVal);
                     socket.emit('updateArray', { oldfactory: selectFactory.value, childArr: arr })
-                } else {
-                    alert("Please ensure you have included a factory name and integer bounds")
-                }
             });
+
+            // On receipt of server emitting status
+            socket.on('status', function(data){
+                displayStatus(data.message);
+            })
         }
     });
 
     // Adds nodes to the jsTree. Position can be 'first' or 'last'.
     function createNode(parent_node, new_node_id, new_node_text, position) {
         $('#jstree').jstree('create_node', $(parent_node), { "text": new_node_text, "id": new_node_id }, position, false, false);
+    }
+
+    // Generate array based on user input
+    function generateArray(arr, numNodes, lowBound, uppBound) {
+        if (uppBound >= lowBound && Number.isInteger(lowBound) && Number.isInteger(uppBound) && uppBound <= 999999999 && lowBound >= -999999999) {
+            while (arr.length < numNodes) {
+                function getRndInteger(min, max) {
+                    return min + Math.floor(Math.random() * (max - min + 1));
+                }
+                var randomnumber = getRndInteger(lowBound, uppBound);
+                arr[arr.length] = randomnumber;
+            }
+            arr.sort((a, b) => a - b);
+            console.log(arr);
+            return arr
+        } else {
+            alert("Please ensure you have included a factory name and integer bounds")
+        }
+    }
+
+    //function grab by ID
+    function element(id) {
+        return document.getElementById(id);
+    }
+
+    //display form error status
+    function displayStatus(s) {
+        error.textContent = s;
+        if (s !== errorDefault.textContent) {
+            setTimeout(function () {
+                displayStatus(errorDefault);
+            }, 5000)
+        }
     }
 
 })();

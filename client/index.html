@@ -24,6 +24,7 @@
                 <h1 class="text-center mb-4">Alex Bradley's Data Tree</h1>
                 <div class="nav pb-4 border-bottom">
                     <div class="col-12 mb-3 text-center">
+                            <div class="col-12" id="serverMessage"></div>
                         <button id="add" class="btn btn-success mx-2" data-toggle="modal" data-target="#modal">Add Factory</button>
                         <button id="clear" class="btn btn-danger mx-2">Reset Tree</button>
                     </div>
@@ -48,13 +49,13 @@
                 <!-- Modal Header -->
                 <div class="modal-header">
                     <h5 class="modal-title" id="ModalLabel">Create Factory</h5>
+                    <div class="col-12" id="addFormMessage"></div>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <!-- Modal Form -->
                 <div class="modal-body">
-                    <div class="col-12" id="error"></div>
                     <label>Name:</label>
                     <label class="font-weight-light col-12">Names may only contain letters, numbers, and underscores</label>
                     <input type="text" id="factoryInput" class="form-control" placeolder="enter name">
@@ -99,13 +100,13 @@
                 <!-- Modal Header -->
                 <div class="modal-header">
                     <h5 class="modal-title" id="ModalLabel">Edit Factory</h5>
+                    <div class="col-12" id="updateFormMessage"></div>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <!-- Modal Form -->
                 <div class="modal-body">
-                    <div class="col-12" id="error"></div>
                     <h6 class="mt-2">Edit factory name</h6>
                     <label class="font-weight-light col-12">Names may only contain letters, numbers, and underscores</label>
                     <input type="text" id="factoryUpdate" class="form-control">

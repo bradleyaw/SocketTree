@@ -2,7 +2,9 @@ const mongo = require('mongodb').MongoClient;
 const path = require("path");
 const port = process.env.PORT || 4000;
 
-const MONGODBURI = 'mongodb://bradleyaw:Password1@ds115472.mlab.com:15472/datatree'
+const MONGODBURI = 'mongodb://bradleyaw:Password1@ds235418.mlab.com:35418/datatreetest'
+
+//const MONGODBURI = 'mongodb://bradleyaw:Password1@ds115472.mlab.com:15472/datatree'
 
 var express = require('express');
 var app = express();
@@ -36,7 +38,7 @@ mongo.connect(MONGODBURI, function (err, dbs) {
     console.log('Mongodb connected');
 
     client.on('connection', function (socket) {
-        const dbTree = dbs.db('datatree').collection('factories');
+        const dbTree = dbs.db('datatreetest').collection('factories');
 
         outputData(dbTree, socket);
 
@@ -49,11 +51,14 @@ mongo.connect(MONGODBURI, function (err, dbs) {
             console.log(data);
             dbTree.findOne({ factory: data.factory }, function (err, result) {
                 if (result) {
+                    statusChange("Entry duplicate - not added to db")
                     console.log("Entry duplicate - not added to db")
                 } else if (!data.childArr.some(isNaN)) {
                     dbTree.insert({ factory: data.factory, childArr: data.childArr }, function () {
                         outputData(dbTree, client);
                     })
+                } else {
+                    statusChange( { message: "Issue with child array data" })
                 }
             })
         })
@@ -63,7 +68,7 @@ mongo.connect(MONGODBURI, function (err, dbs) {
             console.log(data);
             dbTree.findOne({ factory: data.factory }, function (err, result) {
                 if (result) {
-                    console.log("Entry duplicate - not added to db")
+                    statusChange( { message: "Entry duplicate - not added to db" })
                 } else {
                     dbTree.updateOne({ factory: data.oldfactory }, { $set: { factory: data.factory } }, function () {
                         outputData(dbTree, client);
@@ -81,20 +86,23 @@ mongo.connect(MONGODBURI, function (err, dbs) {
                     outputData(dbTree, client);
                 })
             } else {
-                console.log("Error - the array contains indexes with entries other than numbers")
+                statusChange( { message: "Error - the array contains indexes with entries other than numbers" })
             }
         })
 
         // On clear button press delete all documents from Mongo and emit update to all sockets
         socket.on('clear', function (clearData) {
             dbTree.deleteMany({}, function () {
+                statusChange( { message: "Data tree cleared" })
                 client.emit('cleared')
             })
         })
         //On delete button press, delete document that matches the name in the select box
         socket.on('delete', function (deleteData) {
+
             dbTree.deleteOne({ factory: String(deleteData) }, function () {
                 outputData(dbTree, client);
+                statusChange( { message: "entry deleted successfully" })
             })
         })
     });

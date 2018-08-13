@@ -18,8 +18,12 @@
     var upperUpdate = element('upperUpdate')
     var selectUpdate = element('selectUpdate')
     var factoryUpdate = element('factoryUpdate')
-    var error = element('error')
-    var errorDefault = error.textContent;
+    var updateFormMessage = element('updateFormMessage')
+    var updateFormMessageDefault = updateFormMessage.textContent;
+    var addFormMessage = element('addFormMessage')
+    var addFormMessageDefault = addFormMessage.textContent;
+    var serverMessage = element('serverMessage')
+    var serverMessageDefault = serverMessage.textContent;
 
     //Load jsTree JQuery
     $(function () {
@@ -162,7 +166,6 @@
                 arr[arr.length] = randomnumber;
             }
             arr.sort((a, b) => a - b);
-            console.log(arr);
             return arr
         } else {
             alert("Please ensure you have included a factory name and integer bounds")
@@ -176,10 +179,10 @@
 
     //display form error status
     function displayStatus(s) {
-        error.textContent = s;
-        if (s !== errorDefault.textContent) {
+        serverMessage.textContent = s;
+        if (s !== serverMessageDefault.textContent) {
             setTimeout(function () {
-                displayStatus(errorDefault);
+                displayStatus(serverMessageDefault);
             }, 5000)
         }
     }

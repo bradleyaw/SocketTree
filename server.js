@@ -2,9 +2,7 @@ const mongo = require('mongodb').MongoClient;
 const path = require("path");
 const port = process.env.PORT || 4000;
 
-const MONGODBURI = 'mongodb://bradleyaw:Password1@ds235418.mlab.com:35418/datatreetest'
-
-//const MONGODBURI = 'mongodb://bradleyaw:Password1@ds115472.mlab.com:15472/datatree'
+const MONGODBURI = 'mongodb://bradleyaw:Password1@ds115472.mlab.com:15472/datatree'
 
 var express = require('express');
 var app = express();
@@ -38,7 +36,7 @@ mongo.connect(MONGODBURI, function (err, dbs) {
     console.log('Mongodb connected');
 
     client.on('connection', function (socket) {
-        const dbTree = dbs.db('datatreetest').collection('factories');
+        const dbTree = dbs.db('datatree').collection('factories');
 
         outputData(dbTree, socket);
 

@@ -51,7 +51,7 @@ mongo.connect(MONGODBURI, function (err, dbs) {
                 if (result) {
                     statusChange("Entry duplicate - not added to db")
                     console.log("Entry duplicate - not added to db")
-                } else if (!data.childArr.some(isNaN)) {
+                } else if (!data.childArr.some(isNaN) && data.childArr.length <= 15) {
                     dbTree.insert({ factory: data.factory, childArr: data.childArr }, function () {
                         outputData(dbTree, client);
                     })

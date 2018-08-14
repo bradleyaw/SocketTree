@@ -24,7 +24,7 @@
                 <h1 class="text-center mb-4">Alex Bradley's Data Tree</h1>
                 <div class="nav pb-4 border-bottom">
                     <div class="col-12 mb-3 text-center">
-                        <div class="col-12" id="serverMessage"></div>
+                        <div class="col-12" id="serverMessage" style="height: 40px"></div>
                         <button id="add" class="btn btn-success mx-2" data-toggle="modal" data-target="#modal">Add Factory</button>
                         <button id="clear" class="btn btn-danger mx-2">Reset Tree</button>
                     </div>
@@ -55,7 +55,7 @@
                 </div>
                 <!-- Modal Form -->
                 <div class="modal-body">
-                    <div class="col-12" id="addFormMessage"></div>
+                    <div class="col-12 formMessage" style="height: 30px"></div>
                     <label>Name:</label>
                     <label class="font-weight-light col-12">Names may only contain letters, numbers, and underscores</label>
                     <input type="text" id="factoryInput" class="form-control" placeolder="enter name">
@@ -86,7 +86,7 @@
                 <!-- Modal Footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button id="submit" type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                    <button id="submit" type="button" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
         </div>
@@ -106,13 +106,13 @@
                 </div>
                 <!-- Modal Form -->
                 <div class="modal-body">
-                    <div class="col-12" id="updateFormMessage"></div>
-                    <h6 class="mt-2">Edit factory name</h6>
+                    <div class="col-12 formMessage" style="height: 30px"></div>
+                    <h6>Edit factory name</h6>
                     <label class="font-weight-light col-12">Names may only contain letters, numbers, and underscores</label>
                     <input type="text" id="factoryUpdate" class="form-control">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button id="updateName" type="button" class="btn btn-primary" data-dismiss="modal">Update Name</button>
+                        <button id="updateName" type="button" class="btn btn-primary">Update Name</button>
                     </div>
                     <h6 class="mt-4 mb-2">Edit Children</h6>
                     <label>Number of child nodes:</label>
@@ -142,7 +142,7 @@
                 <!-- Modal Footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button id="updateArray" type="button" class="btn btn-primary" data-dismiss="modal">Update Children</button>
+                    <button id="updateArray" type="button" class="btn btn-primary">Update Children</button>
                 </div>
             </div>
         </div>

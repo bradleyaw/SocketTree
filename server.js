@@ -46,31 +46,32 @@ mongo.connect(MONGODBURI, function (err, dbs) {
 
         // On user input add to db and emit data to all sockets
         socket.on('input', function (data) {
-            console.log(data);
             dbTree.findOne({ factory: data.factory }, function (err, result) {
                 if (result) {
-                    statusChange("Entry duplicate - not added to db")
-                    console.log("Entry duplicate - not added to db")
-                } else if (!data.childArr.some(isNaN) && data.childArr.length <= 15) {
+                    statusChange({ message: "Error: Entry duplicate - not added to db" })
+                } else if (!data.childArr.some(isNaN) && data.childArr.length <= 15 && data.factory.match(/^[\w]+$/)) {
                     dbTree.insert({ factory: data.factory, childArr: data.childArr }, function () {
                         outputData(dbTree, client);
+                        statusChange({ message: "Entry added" })
                     })
                 } else {
-                    statusChange( { message: "Issue with child array data" })
+                    statusChange({ message: "Error: Input not valid" })
                 }
             })
         })
 
         //Update Name
         socket.on('updateName', function (data) {
-            console.log(data);
             dbTree.findOne({ factory: data.factory }, function (err, result) {
                 if (result) {
-                    statusChange( { message: "Entry duplicate - not added to db" })
-                } else {
+                    statusChange({ message: "Error: Entry duplicate - not added to db" })
+                } else if (data.factory.match(/^[\w]+$/)){
                     dbTree.updateOne({ factory: data.oldfactory }, { $set: { factory: data.factory } }, function () {
                         outputData(dbTree, client);
+                        statusChange({ message: "Name updated" })
                     })
+                } else {
+                    statusChange({ message: "Error: Update is not valid" })
                 }
             })
 
@@ -78,20 +79,20 @@ mongo.connect(MONGODBURI, function (err, dbs) {
 
         //Update Array
         socket.on('updateArray', function (data) {
-            console.log(data);
-            if (!data.childArr.some(isNaN)) {
+            if (!data.childArr.some(isNaN) && data.childArr.length <= 15) {
                 dbTree.updateOne({ factory: data.oldfactory }, { $set: { childArr: data.childArr } }, function () {
                     outputData(dbTree, client);
+                    statusChange({ message: "Array Updated" })
                 })
             } else {
-                statusChange( { message: "Error - the array contains indexes with entries other than numbers" })
+                statusChange({ message: "Error: Update input values not valid" })
             }
         })
 
         // On clear button press delete all documents from Mongo and emit update to all sockets
         socket.on('clear', function (clearData) {
             dbTree.deleteMany({}, function () {
-                statusChange( { message: "Data tree cleared" })
+                statusChange({ message: "Data tree cleared" })
                 client.emit('cleared')
             })
         })
@@ -100,7 +101,7 @@ mongo.connect(MONGODBURI, function (err, dbs) {
 
             dbTree.deleteOne({ factory: String(deleteData) }, function () {
                 outputData(dbTree, client);
-                statusChange( { message: "entry deleted successfully" })
+                statusChange({ message: "entry deleted successfully" })
             })
         })
     });

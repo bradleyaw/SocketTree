@@ -18,12 +18,8 @@
     var upperUpdate = element('upperUpdate')
     var selectUpdate = element('selectUpdate')
     var factoryUpdate = element('factoryUpdate')
-    var updateFormMessage = element('updateFormMessage')
-    var updateFormMessageDefault = updateFormMessage.textContent;
-    var addFormMessage = element('addFormMessage')
-    var addFormMessageDefault = addFormMessage.textContent;
+    var formMessage = document.getElementsByClassName('formMessage')
     var serverMessage = element('serverMessage')
-    var serverMessageDefault = serverMessage.textContent;
 
     //Load jsTree JQuery
     $(function () {
@@ -53,7 +49,6 @@
 
         // Connected to socket
         if (socket !== undefined) {
-            console.log('Connected to socket...')
 
             //On receipt of data
             socket.on('output', function (data) {
@@ -63,7 +58,6 @@
                     $("#jstree").jstree(true).delete_node(children);
                     // Also reset select option
                     selectFactory.options.length = 0;
-                    console.log(data);
                     for (var i = 0; i < data.length; i++) {
                         createNode("#root", "factory" + data[i].factory, data[i].factory);
                         //for each factory append option to select
@@ -90,16 +84,10 @@
                 var arrayLength = selectInput.value;
                 var lowerVal = Number(lower.value);
                 var upperVal = Number(upper.value);
-                //if statement to validate bounds for Array creation and that factory name exists
-                if (factoryInput.value.match(/^[\w]+$/)) {
-                    generateArray(arr, arrayLength, lowerVal, upperVal);
-                    socket.emit('input', { factory: factoryInput.value, childArr: arr })
-                    factoryInput.value = 'John';
-                    lower.value = 1;
-                    upper.value = 100;
-                    selectInput.value = 1;
-                } else {
-                    alert("Please ensure you have included a factory name and integer bounds")
+                generateArray(arr, arrayLength, lowerVal, upperVal);
+                socket.emit('input', { factory: factoryInput.value, childArr: arr })
+                if ((arr[0] || arr[0] === 0) && factoryInput.value.match(/^[\w]+$/)) {
+                    $('#modal').modal('hide');
                 }
             });
 
@@ -126,26 +114,32 @@
 
             // On update factory name modal submit
             updateName.addEventListener('click', function (event) {
-                if (factoryInput.value.match(/^[\w]+$/)) {
-                    socket.emit('updateName', { oldfactory: selectFactory.value, factory: factoryUpdate.value })
-                } else {
-                    alert("Please ensure you have included a factory name and integer bounds")
+                socket.emit('updateName', { oldfactory: selectFactory.value, factory: factoryUpdate.value })
+                if (factoryUpdate.value.match(/^[\w]+$/)) {
+                    $('#updateModal').modal('hide');
                 }
             });
 
             // On update child array modal submit
             updateArray.addEventListener('click', function (event) {
-                    var arr = [];
-                    var arrayLength = selectUpdate.value;
-                    var lowerVal = Number(lowerUpdate.value);
-                    var upperVal = Number(upperUpdate.value);
-                    generateArray(arr, arrayLength, lowerVal, upperVal);
-                    socket.emit('updateArray', { oldfactory: selectFactory.value, childArr: arr })
+                var arr = [];
+                var arrayLength = selectUpdate.value;
+                var lowerVal = Number(lowerUpdate.value);
+                var upperVal = Number(upperUpdate.value);
+                generateArray(arr, arrayLength, lowerVal, upperVal);
+                socket.emit('updateArray', { oldfactory: selectFactory.value, childArr: arr })
+                if (arr[0] || arr[0] === 0) {
+                    $('#updateModal').modal('hide');
+                }
             });
 
             // On receipt of server emitting status
-            socket.on('status', function(data){
-                displayStatus(data.message);
+            socket.on('status', function (data) {
+                if (data.message.includes("Error:")) {
+                    displayError(data.message);
+                } else {
+                    displaySuccess(data.message);
+                }
             })
         }
     });
@@ -176,13 +170,25 @@
     function element(id) {
         return document.getElementById(id);
     }
-
-    //display form error status
-    function displayStatus(s) {
+    //display success status
+    function displaySuccess(s) {
         serverMessage.textContent = s;
-        if (s !== serverMessageDefault.textContent) {
+        if (s !== "") {
             setTimeout(function () {
-                displayStatus(serverMessageDefault);
+                displaySuccess("");
+            }, 5000)
+        }
+    }
+    //display form error status
+    function displayError(s) {
+        if (s.includes("Update")) {
+            formMessage[1].textContent = s;
+        } else {
+            formMessage[0].textContent = s;
+        }
+        if (s !== "") {
+            setTimeout(function () {
+                displayError("");
             }, 5000)
         }
     }
